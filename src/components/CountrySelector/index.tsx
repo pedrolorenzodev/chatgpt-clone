@@ -15,7 +15,6 @@ import { Dimensions } from '@/src/constants/dimensions';
 import { Press } from '@/src/constants/animations';
 
 interface CountrySelectorProps {
-  countryCode: string;
   dialCode: string;
   flagEmoji: string;
   onPress: () => void;

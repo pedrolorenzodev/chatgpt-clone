@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Colors, Spacing, Typography } from '@/src/constants/design-tokens';
+import { Colors } from '@/src/constants/colors';
+import { Spacing } from '@/src/constants/spacing';
+import { Typography } from '@/src/constants/typography';
 import LinkText from '@/src/components/LinkText';
 
 interface AuthFooterLinksProps {

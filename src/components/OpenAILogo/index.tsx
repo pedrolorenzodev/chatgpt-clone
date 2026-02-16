@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import { Colors, Dimensions } from '@/src/constants/design-tokens';
+import { Colors } from '@/src/constants/colors';
+import { Dimensions } from '@/src/constants/dimensions';
 
 interface OpenAILogoProps {
   size?: number;

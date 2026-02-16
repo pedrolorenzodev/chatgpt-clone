@@ -14,14 +14,18 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolateColor,
+} from 'react-native-reanimated';
 
-import { useAnimatedPress } from '@/src/hooks/useAnimatedPress';
 import { Colors } from '@/src/constants/colors';
 import { Typography } from '@/src/constants/typography';
 import { Dimensions } from '@/src/constants/dimensions';
 import { Spacing } from '@/src/constants/spacing';
-import { Press } from '@/src/constants/animations';
+import { Animations } from '@/src/constants/animations';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -56,9 +60,15 @@ function OutlineButton({
   width = 'full',
   accessibilityLabel,
 }: OutlineButtonProps): React.JSX.Element {
-  const { animatedStyle, onPressIn, onPressOut } = useAnimatedPress({
-    opacity: Press.opacityButton,
-  });
+  const pressed = useSharedValue(0);
+
+  const animatedBgStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      pressed.value,
+      [0, 1],
+      ['transparent', Colors.bg.pressOutlineButton],
+    ),
+  }));
 
   const containerStyle = useMemo(
     () => [
@@ -87,38 +97,46 @@ function OutlineButton({
     }
   }, [isLoading, onPress]);
 
+  const handlePressIn = useCallback((): void => {
+    pressed.value = withTiming(1, { duration: Animations.durationPress });
+  }, [pressed]);
+
+  const handlePressOut = useCallback((): void => {
+    pressed.value = withTiming(0, { duration: Animations.durationPress });
+  }, [pressed]);
+
   return (
-    <Animated.View
+    <View
       style={[
-        styles.animatedWrapper,
+        styles.outerWrapper,
         width === 'full' ? styles.widthFull : styles.widthAuto,
-        animatedStyle,
       ]}
     >
       <Pressable
         onPress={handlePress}
-        onPressIn={onPressIn}
-        onPressOut={onPressOut}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
         disabled={isLoading}
         accessibilityLabel={accessibilityLabel}
         accessibilityRole="button"
-        style={containerStyle}
       >
-        <View style={styles.contentRow}>
-          {icon && <View style={styles.iconWrapper}>{icon}</View>}
-          <Text style={textStyle} numberOfLines={1}>
-            {label}
-          </Text>
-          {isLoading && (
-            <ActivityIndicator
-              size="small"
-              color={Colors.spinner.inlineMuted}
-              style={styles.spinner}
-            />
-          )}
-        </View>
+        <Animated.View style={[containerStyle, animatedBgStyle]}>
+          <View style={styles.contentRow}>
+            {icon && <View style={styles.iconWrapper}>{icon}</View>}
+            <Text style={textStyle} numberOfLines={1}>
+              {label}
+            </Text>
+            {isLoading && (
+              <ActivityIndicator
+                size="small"
+                color={Colors.spinner.inlineMuted}
+                style={styles.spinner}
+              />
+            )}
+          </View>
+        </Animated.View>
       </Pressable>
-    </Animated.View>
+    </View>
   );
 }
 
@@ -127,9 +145,7 @@ function OutlineButton({
 // ---------------------------------------------------------------------------
 
 const styles = StyleSheet.create({
-  animatedWrapper: {
-    overflow: 'hidden',
-  },
+  outerWrapper: {},
   widthFull: {
     width: '100%',
   },
@@ -139,7 +155,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.bg.buttonOutline,
     borderWidth: 1,
     paddingHorizontal: Spacing.xxl,
   },

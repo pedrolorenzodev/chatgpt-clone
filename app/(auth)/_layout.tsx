@@ -5,7 +5,7 @@ function AuthLayout(): React.JSX.Element {
   return (
     <Stack screenOptions={screenOptions}>
       <Stack.Screen name="welcome" />
-      <Stack.Screen name="login" />
+      <Stack.Screen name="login" options={loginOptions} />
       <Stack.Screen
         name="loading"
         options={loadingOptions}
@@ -18,6 +18,10 @@ const screenOptions = {
   headerShown: false,
   contentStyle: { backgroundColor: '#000000' },
   animation: 'slide_from_right' as const,
+} as const;
+
+const loginOptions = {
+  animation: 'none' as const,
 } as const;
 
 const loadingOptions = {

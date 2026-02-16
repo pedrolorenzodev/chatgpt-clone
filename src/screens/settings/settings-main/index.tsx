@@ -1,26 +1,41 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+/**
+ * SettingsMainScreen — Entry point for the Settings screen.
+ *
+ * Renders UnauthSettingsContent for unauthenticated users.
+ * AuthSettingsContent will be added when that task is implemented.
+ */
 
-function SettingsScreen(): React.JSX.Element {
+import React from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
+
+import UnauthSettingsContent from '@/src/screens/settings/settings-main/components/UnauthSettingsContent';
+import { Colors } from '@/src/constants/colors';
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+function SettingsMainScreen(): React.JSX.Element {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Settings</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <UnauthSettingsContent />
+    </SafeAreaView>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
+    backgroundColor: Colors.bg.primary,
   },
 });
 
-export default SettingsScreen;
+// ---------------------------------------------------------------------------
+// Export
+// ---------------------------------------------------------------------------
+
+export default SettingsMainScreen;

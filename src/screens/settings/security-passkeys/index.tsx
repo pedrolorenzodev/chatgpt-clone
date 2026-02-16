@@ -1,26 +1,54 @@
+/**
+ * SecurityPasskeysScreen -- Settings screen displaying the passkeys empty state.
+ *
+ * Shows a SettingsHeader with "Passkeys" title and back navigation,
+ * and the PasskeyEmptyState component centered in the remaining space.
+ */
+
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+
+import SettingsHeader from '@/src/components/SettingsHeader';
+import PasskeyEmptyState from '@/src/components/PasskeyEmptyState';
+import { Colors } from '@/src/constants/colors';
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 function SecurityPasskeysScreen(): React.JSX.Element {
+  const router = useRouter();
+
+  const handleBackPress = (): void => {
+    router.back();
+  };
+
+  const handleCreatePress = (): void => {
+    // No-op: passkey creation is not implemented
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Security Passkeys</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <SettingsHeader title="Passkeys" onBackPress={handleBackPress} />
+      <PasskeyEmptyState onCreatePress={handleCreatePress} />
+    </SafeAreaView>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
+    backgroundColor: Colors.bg.primary,
   },
 });
+
+// ---------------------------------------------------------------------------
+// Export
+// ---------------------------------------------------------------------------
 
 export default SecurityPasskeysScreen;

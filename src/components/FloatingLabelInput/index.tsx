@@ -22,6 +22,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   interpolate,
+  interpolateColor,
 } from 'react-native-reanimated';
 import { Colors } from '@/src/constants/colors';
 import { Animations, Easings } from '@/src/constants/animations';
@@ -36,7 +37,7 @@ interface FloatingLabelInputProps {
   onBlur?: () => void;
   keyboardType?: KeyboardTypeOptions;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
-  autoComplete?: string;
+  autoComplete?: React.ComponentProps<typeof TextInput>['autoComplete'];
   borderColor?: string;
   borderRadius?: number;
   accessibilityLabel: string;
@@ -56,6 +57,7 @@ function FloatingLabelInput({
   onBlur,
   keyboardType,
   autoCapitalize = 'none',
+  autoComplete,
   borderColor,
   borderRadius,
   accessibilityLabel,
@@ -108,10 +110,12 @@ function FloatingLabelInput({
   });
 
   const animatedLabelColorStyle = useAnimatedStyle(() => {
-    const colorValue = interpolate(progress.value, [0, 1], [0, 1]);
-    return {
-      color: colorValue > 0.5 ? Colors.text.floatingLabel : Colors.text.placeholder,
-    };
+    const color = interpolateColor(
+      progress.value,
+      [0, 1],
+      [Colors.text.placeholder, Colors.text.floatingLabel],
+    );
+    return { color };
   });
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(() => {
@@ -149,6 +153,7 @@ function FloatingLabelInput({
           onBlur={handleBlur}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
+          autoComplete={autoComplete}
           style={styles.input}
           cursorColor={Colors.text.primary}
           selectionColor={Colors.text.selectionHighlight}
