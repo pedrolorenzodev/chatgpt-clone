@@ -1,42 +1,46 @@
 /**
- * SidebarPanel — Placeholder sidebar content panel.
+ * SidebarPanelScreen -- Root sidebar panel that switches between
+ * authenticated and unauthenticated variants.
  *
- * Background: #171717 (bg-sidebar). Actual content will be built in Wave 4.
+ * Reads `isAuthenticated` from useAuthStore and renders the matching
+ * sub-component. Background: #171717 (Colors.bg.sidebar).
  */
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors } from '@/src/constants/design-tokens';
+import { View, StyleSheet } from 'react-native';
+
+import { useAuthStore } from '@/src/stores/auth.store';
+import { Colors } from '@/src/constants/colors';
+import AuthSidebar from './components/AuthSidebar';
+import UnauthSidebar from './components/UnauthSidebar';
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 function SidebarPanelScreen(): React.JSX.Element {
-  const insets = useSafeAreaInsets();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 16, paddingBottom: insets.bottom }]}>
-      <Text style={styles.title}>Sidebar</Text>
-      <Text style={styles.subtitle}>Placeholder content</Text>
+    <View style={styles.container}>
+      {isAuthenticated ? <AuthSidebar /> : <UnauthSidebar />}
     </View>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.bg.sidebar,
-    paddingHorizontal: 16,
-  },
-  title: {
-    color: Colors.text.primary,
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  subtitle: {
-    color: Colors.text.tertiary,
-    fontSize: 14,
-    fontWeight: '400',
   },
 });
+
+// ---------------------------------------------------------------------------
+// Export
+// ---------------------------------------------------------------------------
 
 export default SidebarPanelScreen;
